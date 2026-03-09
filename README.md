@@ -658,3 +658,17 @@ int main(void) {
     }
 }
 ```
+
+## 3. Nghiên cứu và thực hành TIMER
+
+Trong quá trình tìm hiểu về **Timer** trên vi điều khiển STM32, em  thực hiện cấu hình **PWM (Pulse Width Modulation)** để điều khiển độ sáng của LED.
+
+### 3.1 Sử dụng TIMER tạo PWM điều khiển 4 LED
+
+- Cấu hình **Timer ở chế độ PWM** để tạo tín hiệu điều chế độ rộng xung.
+- Sử dụng **4 kênh của Timer (Channel 1, Channel 2, Channel 3, Channel 4)** để điều khiển 4 LED khác nhau.
+- Mỗi kênh PWM có **duty cycle khác nhau**, do đó độ sáng của mỗi LED sẽ khác nhau.
+
+```
+
+```
