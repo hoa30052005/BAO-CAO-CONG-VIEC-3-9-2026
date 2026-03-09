@@ -672,3 +672,102 @@ Trong quá trình tìm hiểu về **Timer** trên vi điều khiển STM32, em 
 ```
 
 ```
+
+
+## 4. Nghiên cứu và thực hành ESP32 với cảm biến INA219 và BH1750
+
+Trong quá trình tìm hiểu về vi điều khiển **ESP32**, em đã thực hiện một hệ thống đo và giám sát các thông số môi trường bao gồm **dòng điện và cường độ ánh sáng**, sau đó hiển thị lên **LCD I2C** và điều khiển **LED cảnh báo** dựa trên các ngưỡng đã đặt.
+
+Hệ thống sử dụng giao tiếp **I2C** để kết nối với các cảm biến và màn hình LCD.
+
+
+- Sử dụng cảm biến **INA219** để đo dòng điện chạy qua biến trở.
+- Giá trị dòng điện được đọc thông qua giao tiếp **I2C**.
+- Cảm biến ánh sáng BH1750 đo lux ánh sáng 
+- Dữ liệu dòng điện được xử lý và hiển thị lên màn hình **LCD 16x2**.
+- Nếu vượt ngưỡng ánh sáng cho phép hoặc dòng điện cho phép thì led tắt
+
+```
+#include <Wire.h>
+#include <Adafruit_INA219.h>
+#include <BH1750.h>
+#include <LiquidCrystal_I2C.h>
+
+// Khởi tạo các đối tượng
+Adafruit_INA219 ina219;
+BH1750 lightMeter;
+LiquidCrystal_I2C lcd(0x27, 16, 2); // Địa chỉ 0x27 thường dùng cho LCD I2C
+
+// Định nghĩa chân cắm và ngưỡng
+const int LED_PIN = 2;          // Đèn LED nối chân GPIO 2
+const float CURRENT_LIMIT = 5.0; // Ngưỡng dòng điện (mA) - Tùy chỉnh
+const float LUX_LIMIT = 100.0;   // Ngưỡng ánh sáng (Lux) - Tùy chỉnh
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, HIGH); // Mặc định bật LED
+
+  // Khởi tạo I2C
+  Wire.begin();
+
+  // Kiểm tra INA219
+  if (!ina219.begin()) {
+    Serial.println("Khong tim thay chip INA219");
+    while (1);
+  }
+
+  // Kiểm tra BH1750
+  if (!lightMeter.begin()) {
+    Serial.println("Khong tim thay BH1750");
+  }
+
+  // Khởi tạo LCD
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("He thong san sang");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  // 1. Đọc giá trị từ cảm biến
+  float current_mA = ina219.getCurrent_mA();
+  float lux = lightMeter.readLightLevel();
+
+  // Nếu dòng điện âm (do đấu ngược), lấy giá trị tuyệt đối
+  if (current_mA < 0) current_mA = -current_mA;
+
+  // 2. Hiển thị lên LCD
+  // Dòng 1: Hiển thị dòng điện từ biến trở
+  lcd.setCursor(0, 0);
+  lcd.print("I: ");
+  lcd.print(current_mA, 1);
+  lcd.print(" mA    ");
+
+  // Dòng 2: Hiển thị cường độ ánh sáng
+  lcd.setCursor(0, 1);
+  lcd.print("L: ");
+  lcd.print(lux, 1);
+  lcd.print(" lux   ");
+
+  // 3. Logic điều khiển LED
+  // Tắt LED nếu: Dòng > Ngưỡng HOẶC Ánh sáng > Ngưỡng
+  if (current_mA > CURRENT_LIMIT || lux > LUX_LIMIT) {
+    digitalWrite(LED_PIN, LOW); // Tắt LED
+    // In cảnh báo nhỏ lên LCD nếu cần
+    Serial.println("CANH BAO: Vuot nguong - TAT LED");
+  } else {
+    digitalWrite(LED_PIN, HIGH); // Bật LED
+  }
+
+  // In ra Serial để theo dõi trên máy tính
+  Serial.print("Current: "); Serial.print(current_mA); Serial.print(" mA | ");
+  Serial.print("Light: "); Serial.print(lux); Serial.println(" lux");
+
+  delay(500); // Đọc 2 lần mỗi giây
+}
+```
+## Hình hệ thống ESP32
+ ![alt text](image.png)
