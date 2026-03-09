@@ -769,5 +769,5 @@ void loop() {
   delay(500); // Đọc 2 lần mỗi giây
 }
 ```
-## Hình hệ thống ESP32
- ![alt text](image.png)
+## Hình ảnh  hệ thống ESP32
+![alt text](image.png)
