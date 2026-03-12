@@ -904,6 +904,13 @@ Topic: led1 = 1
 Topic: led2 = 0
 */
 ```
+## Hình ảnh  hệ thống ESP32
+![alt text](image-1.png)
+![alt text](image-2.png)
+- nếu ta gửi từ wed trên MQTT broker esp32 sẽ nhận dữ liệu 
+- như trường hợp trên là 1 1 là cả 2 led đều sáng
+
+
 
 # B. Tìm hiểu công việc
 
