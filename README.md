@@ -3,7 +3,7 @@ báo cáo công việc ngày 3/9/2026
 
 # A. Công việc đã làm
 
-## 1. Nghiên cứu và thực hành ADC (Analog to Digital Converter)
+## 1. Nghiên cứu và thực hành ADC 
 
 Trong quá trình tìm hiểu về ngoại vi ADC trên vi điều khiển STM32, em đã thực hiện các nội dung sau
 
@@ -99,7 +99,7 @@ void int2char(int num, char *str)
 	{
 		temp = str[j];
 		str[j] = str[i];
-		str[i] = temp;
+str[i] = temp;
 		j++;
 		i--;
 	}
@@ -177,7 +177,7 @@ void ADC_DMA_Configure()
 	/*so kenbh*/
 	DMA1_Channel1 -> CNDTR = 2; // so kenh 
 	/*Cau hinh cho MODE DMA: Cirrcle, Tang dia chi : MINC,Kieu 16 bit */
-	DMA1_Channel1 -> CCR |= 0x5A0; //minc thi chuyen dc sang data tiep theo,MSIZE là 16 bit vi kich co mang[],PSIZE 16 bit vi thanh ghi DR la 16 bit,CIRC BAT len no ms chay lap di lap lai
+DMA1_Channel1 -> CCR |= 0x5A0; //minc thi chuyen dc sang data tiep theo,MSIZE là 16 bit vi kich co mang[],PSIZE 16 bit vi thanh ghi DR la 16 bit,CIRC BAT len no ms chay lap di lap lai
 	/*Enable Cho DMA channel1*/
 	DMA1_Channel1 -> CCR  |= 0x01; //bit EN Channel bAt dAu nghe request tu ADC
 	/*Cau hinh ADC1*/
@@ -255,7 +255,7 @@ int main()
 ```
 
 
-### 1.3 Sử dụng ngắt ADC
+### 1.3 Sử dụng ngắt ADC với EOC
 - Cấu hình **ADC Interrupt** để vi điều khiển xử lý khi quá trình chuyển đổi ADC hoàn thành.
 - Khi ADC hoàn thành chuyển đổi, chương trình sẽ nhảy vào **hàm ngắt** để đọc giá trị ADC.
 - Giá trị sau đó được gửi qua UART để hiển thị.
@@ -296,7 +296,7 @@ void Config_Interrup_ADC(){
 	ADC1->SMPR2 |= 7<<15;  //chon cho kenh PA5 tan so lay mau smpr2 la cho kenh 0-9,smpr1 10-17
 	ADC1->SQR3 |=0x5;  // chon kenh(day la kenh 5)  mik  dang dung muc do uu tien cao nhat
 	ADC1 -> CR2    |= 0x03;//Bat ADC khoi dong may + cho phép do liên tuc
-	delay_ms(1); //Sau khi bat ADC , doi ADC on dinh
+delay_ms(1); //Sau khi bat ADC , doi ADC on dinh
 	ADC1->CR2 |=0x01; // bat dau chuyen dôi
 	delay_ms(1);
 	ADC1 -> CR2    |= 0x04; //giam bot sai so
@@ -433,7 +433,7 @@ void Config_Interrup_ADC(){
 	ADC1->CR1 |= 5 << 0;    // AWD giám sát channel 5
 	ADC1->LTR = 820;
   ADC1->HTR = 3276;
-	NVIC_EnableIRQ(ADC1_2_IRQn); // Cho phep CPU xu ly ngat, ngat trong
+NVIC_EnableIRQ(ADC1_2_IRQn); // Cho phep CPU xu ly ngat, ngat trong
 	
 }
 
@@ -513,11 +513,11 @@ int main(){
 ```
 
 
-## 2. Nghiên cứu và thực hành UART (Universal Asynchronous Receiver Transmitter)
+## 2. Nghiên cứu và thực hành UART 
 
 Trong quá trình tìm hiểu về giao tiếp UART trên vi điều khiển STM32, tôi đã thực hiện truyền và nhận dữ liệu sử dụng **DMA** nhằm tăng hiệu suất truyền thông giữa vi điều khiển và máy tính.
 
-### 2.1 UART với DMA RX (Nhận dữ liệu để điều khiển LED)
+### 2.1 UART với DMA RX nhận dữ liệu để điều khiển LED
 
 - Cấu hình **UART RX kết hợp DMA** để nhận dữ liệu từ máy tính.
 - Dữ liệu được gửi từ phần mềm **Hercules** dưới dạng chuỗi ký tự.
@@ -552,7 +552,7 @@ void UART1_DMA_RX_Init(void) {
     USART1->CR3 |= (1 << 6); // DMA RX
 
     // 5. C?u hình DMA1 - Channel 5 (Dành cho USART1_RX)
-    DMA1_Channel5->CPAR = (uint32_t)&(USART1->DR); // Ngu?n: Thanh ghi DR c?a UART
+DMA1_Channel5->CPAR = (uint32_t)&(USART1->DR); // Ngu?n: Thanh ghi DR c?a UART
     DMA1_Channel5->CMAR = (uint32_t)rx_buffer;      // Ðích: M?ng rx_buffer
     DMA1_Channel5->CNDTR = 6;                       // Nh?n dúng 6 ký t? thì d?ng/reset
     
@@ -618,7 +618,7 @@ void UART1_DMA_Init(void) {
     DMA1_Channel4->CPAR = (uint32_t)&(USART1->DR); // Ðia chi dích: Thanh ghi DR cua UART
     DMA1_Channel4->CMAR = (uint32_t)tx_buffer;      // Ðia chi nguon: Mang tx_buffer
     
-    /* C?u hình thanh ghi CCR c?a DMA Channel 4:
+/* C?u hình thanh ghi CCR c?a DMA Channel 4:
        Bit 7 (MINC) = 1: Tu dong tang dia chi bo nho
        Bit 4 (DIR)  = 1: Huong truyen tu stm32 -> ra chan nen DIR =1 ngc lai DIR =0 VD ADC DIR =0
     */
@@ -697,7 +697,6 @@ Hệ thống sử dụng giao tiếp **I2C** để kết nối với các cảm 
 Adafruit_INA219 ina219;
 BH1750 lightMeter;
 LiquidCrystal_I2C lcd(0x27, 16, 2); // Địa chỉ 0x27 thường dùng cho LCD I2C
-
 // Định nghĩa chân cắm và ngưỡng
 const int LED_PIN = 2;          // Đèn LED nối chân GPIO 2
 const float CURRENT_LIMIT = 5.0; // Ngưỡng dòng điện (mA) - Tùy chỉnh
@@ -771,3 +770,257 @@ void loop() {
 ```
 ## Hình ảnh  hệ thống ESP32
 ![alt text](image.png)
+
+- dùng cảm biến dòng INA219  để đo dòng biến trở là  vặn dòng và nếu nó vượt ngưỡng cho phép led sẽ tắt
+- cảm biến ánh sáng BH1750 để đo lux ánh sáng nếu vượt ngưỡng ánh sáng cho phép led tắt
+
+
+## 5. Nghiên cứu và thực hành ESP32 với giao thức MQTT để điều khiển LED
+
+Trong phần này, em đã nghiên cứu và xây dựng hệ thống **điều khiển LED từ xa thông qua giao thức MQTT**.  
+Hệ thống sử dụng **ứng dụng MQTT trên điện web** để gửi dữ liệu điều khiển đến **ESP32**, từ đó ESP32 sẽ bật hoặc tắt các LED tương ứng.
+
+Giao tiếp MQTT được thực hiện thông qua **WebSocket SSL** để kết nối đến **MQTT Broker HiveMQ Cloud**.
+
+```
+
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <WiFi.h>
+#include <WebSocketsClient.h>
+#include <MQTTPubSubClient.h>
+// dùng wedshoket để kết nối tới mqtt broker  nhanh
+// Thông tin WiFi
+const char* ssid = "TANG03";
+const char* pass = "0976152886";
+
+WebSocketsClient client;  //Tạo WebSocket client để kết nối tới MQTT broker.
+MQTTPubSubClient mqtt;  //chạy trên WebSocket
+
+#define ledPin 2
+#define ledPin2 15
+
+
+void setup() {
+    Serial.begin(115200);
+    pinMode(ledPin, OUTPUT);
+    pinMode(ledPin2, OUTPUT);
+
+    // Kết nối WiFi
+    Serial.print("Connecting to wifi...");
+    WiFi.begin(ssid, pass);
+    while (WiFi.status() != WL_CONNECTED) {
+        Serial.print(".");
+        delay(1000);
+    }
+    Serial.println(" connected!");
+     Serial.println(" connected to host..."); //Thông báo chuẩn bị kết nối MQTT.
+  
+
+    // Cấu hình MQTT
+    mqtt.begin(client);//liên kết MQTT client ↔ WebSocket client
+    client.disconnect();//Đảm bảo WebSocket không còn kết nối cũ.
+    Serial.print("Connecting to mqtt broker...");
+
+    const char*  mqtt_server ="550abcc577af4b48a854187cead06428.s1.eu.hivemq.cloud";//Địa chỉ MQTT Broker
+    client.beginSSL(mqtt_server,8884,"/mqtt"); //. Kết nối WebSocket SSL
+    client.setReconnectInterval(2000);//Nếu mất kết nối webSocket tự reconnect sau 2 giây
+    Serial.print("connecting to mqtt broker");
+
+  while(!mqtt.connect("ESP32","hoatz2005","Hoa@1234")){//Kết nối MQTT
+    Serial.print(".");    
+  }
+
+  mqtt.subscribe("data", [](const String& payload, const size_t size) {//bên nhận ESP32 đăng ký nhận dữ liệu từ topic để BROKER chuyển đến
+  Serial.print("Data: ");
+  Serial.println(payload);//payload là "led1":0,"led2":1
+
+  // DATA NHAN DUOC {"led1":1,"led2":1}
+
+  StaticJsonDocument<200> doc;
+
+  // Phân tích cú pháp JSON
+  DeserializationError error = deserializeJson(doc, payload);
+
+  // Kiểm tra lỗi
+  if (error) {
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.f_str());
+    return;
+  }
+
+  JsonObject obj = doc.as<JsonObject>();
+
+  if(obj.containsKey("led1")){
+    bool ledState = doc["led1"];  // là trangk thái led1":1
+    digitalWrite(ledPin, ledState); // led =1 sáng
+    int state = digitalRead(ledPin);
+    mqtt.publish("led1", String(state)); // dẩy lên MQTT
+  }
+
+  if(obj.containsKey("led2")){
+    bool ledState2 = doc["led2"];
+    digitalWrite(ledPin2, ledState2);
+    int state = digitalRead(ledPin2);
+    mqtt.publish("led2", String(state));
+  }
+
+});
+}
+
+
+void loop() {
+
+  client.loop();   // duy trì WebSocket
+  mqtt.update();   // xử lý MQTT publish/subscribe
+
+}
+
+
+/*
+
+Web/App
+   │
+   │ publish
+   ▼
+Topic: data
+Payload: {"led1":1,"led2":0}
+   │
+   ▼
+MQTT Broker
+   │
+   ▼
+ESP32 subscribe
+   │
+   ▼
+parse JSON
+   │
+   ├─ LED1 bật
+   └─ LED2 tắt
+   │
+   ▼
+ESP32 publish
+Topic: led1 = 1
+Topic: led2 = 0
+*/
+```
+
+# B. Tìm hiểu công việc
+
+## 1. Nghiên cứu và thực hành ADC
+
+### 1.1 Đọc giá trị ADC từ biến trở và hiển thị qua UART
+
+
+- em đã tham khảo ý tưởng trên youtube và xem clip nguòi ta hướng dẫn 
+- em cũng nhờ sự trợ giúp của AI giúp em code và fix lỗi
+
+
+
+### 1.2 Sử dụng ADC với DMA để đọc đa kênh và truyền dữ liệu qua UART
+
+
+- Thầy Thao đã gửi code cho bọn em tham khảo
+- Và em đã nhờ AI giải thích code kĩ càng 
+- và em bắt đầu code lại ADC với DMA 
+
+
+
+### 1.3 Sử dụng ngắt ADC với EOC
+
+
+- em đã xem trên youtube để tìm hiểu nguyên lý hoạt động của ngắt
+- em đã nhờ AI giải thích kĩ càng hơn và cho ví dụ để em dễ hình dung
+- sau đó em code và dùng biến trở và UART để kiểm nghiệm
+
+
+
+### 1.4 Sử dụng Analog Watchdog (AWD)
+
+- em đã xem trên youtube để tìm hiểu nguyên lý hoạt động của ngắt AWD là như nào
+- em đã nhờ AI giải thích kĩ càng hơn và cho ví dụ để em dễ hình dung
+- sau đó em code và dùng biến trở và UART để kiểm nghiệm
+
+
+## 2. Nghiên cứu và thực hành UART
+
+### 2.1 UART với DMA RX nhận dữ liệu để điều khiển LED
+
+- em dựa trên cái ADC với DMA xong em nhờ AI gợi ý 
+- em dựa trên cái UART trước để lấy ý tưởng và bắt đầu mày mò code
+
+### 2.2 UART với DMA TX gửi chuỗi dữ liệu lên Hercules
+- cái này em cũng tìm hiểu y hệt cái  UARTRX
+- em dựa trên cái ADC với DMA xong em nhờ AI gợi ý 
+- em dựa trên cái UART trước để lấy ý tưởng và bắt đầu mày mò code
+
+## 3. Nghiên cứu và thực hành TIMER
+
+### 3.1 Sử dụng TIMER tạo PWM điều khiển LED
+- em đã xem youtub để tìm hiểu
+- nhờ AI giải thích những chỗ mình không hiểu
+- xong em bắt tay vào code và nhờ AI gợi ý
+
+
+
+## 4. Nghiên cứu và thực hành ESP32 với cảm biến INA219 và BH1750
+
+- em xem qua youtub về INA219 và BH1750
+- em nhờ AI hỗ trợ ý tưởng và lắp mạch
+- sau đó bắt đầu code và thử nghiệm
+
+## 5. Nghiên cứu và thực hành ESP32 với giao thức MQTT để điều khiển LED
+
+- em đã xem trên youtube và tìm hiểu cách trao đổi dữ liệu như nào
+- em nảy ra ý tưởng là gửi dữ liệu từ wed MQTT hivemp  xem có sáng không
+- và đã nhờ AI code hộ và tìm hiểu nguyên lý và thực hành kiêm nghiệm
+
+
+# C. Khó khăn đang gặp
+
+Trong quá trình nghiên cứu và thực hành các nội dung trên, gặp một số khó khăn sau:
+
+## 1. Khó khăn khi làm việc với ADC
+- Ban đầu em chưa hiểu rõ cơ chế hoạt động của ADC đặc biệt là quá trình chuyển đổi từ tín hiệu analog sang tín hiệu số.
+- Khi cấu hình ADC nhiều kênh với DMA, việc thiết lập thứ tự kênh  và bộ nhớ lưu dữ liệu còn bị nhầm lẫn.
+- Khi sử dụng **Analog Watchdog**, việc thiết lập ngưỡng trên và ngưỡng dưới ban đầu chưa chính xác nên ngắt bị kích hoạt liên tục.
+
+## 2. Khó khăn khi sử dụng UART với DMA
+
+- Ban đầu chưa hiểu rõ cách hoạt động của DMA RX và DMA TX trong truyền nhận UART.
+- Gặp lỗi khi cấu hình buffer nhận dữ liệu, dẫn đến việc dữ liệu nhận được bị sai hoặc không nhận được.
+
+## 3. Khó khăn khi sử dụng TIMER và PWM
+
+- Việc tính toán Prescaler và ARR để tạo ra tần số PWM mong muốn còn gặp khó khăn.
+- Khi điều chỉnh duty cycle, đôi lúc LED thay đổi độ sáng không đúng như mong muốn do cấu hình timer chưa chính xác.
+
+## 4. Khó khăn khi làm việc với ESP32 và cảm biến
+
+- Trong quá trình giao tiếp với các cảm biến INA219 và BH1750, ban đầu gặp lỗi trong việc cấu hình giao tiếp I2C.
+- Một số trường hợp ESP32 không đọc được dữ liệu từ cảm biến do sai địa chỉ I2C hoặc kết nối phần cứng chưa đúng.
+
+## 5. Khó khăn khi sử dụng giao thức MQTT
+
+- Em  chưa hiểu rõ mô hình hoạt động Publisher - Broker - Subscriber của MQTT.
+- Gặp khó khăn trong quá trình cấu hình kết nối WiFi và MQTT Broker trên ESP32.
+- Trong một số trường hợp ESP32 bị mất kết nối MQTT và cần viết thêm cơ chế **reconnect** để tự động kết nối lại.
+
+
+# D. Công việc tiếp theo
+
+Trong thời gian tới sẽ tiếp tục nghiên cứu và phát triển các nội dung sau:
+
+## 1. Nghiên cứu thêm các giao thức truyền thông trên STM32
+## 2. Nghiên cứu sâu hơn về ESP32
+## 3. Nghiên cứu và thực hành nâng cao với giao thức MQTT
+
+# E. Linh kiện đang giữ
+
+| Tên linh kiện | Số lượng |
+|:---|:---:|
+| ESP32 | 1 |
+| STM32 | 1 |
+| CP2102 USB to UART | 1 |
+| Biến trở | 2 |
+| LCD | 1 |
